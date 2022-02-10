@@ -66,7 +66,7 @@ struct swaybg_output {
 	struct zxdg_output_v1 *xdg_output;
 	char *name;
 	char *identifier;
-	int num;
+	int display_id;
 
 	struct swaybg_state *state;
 	struct swaybg_output_config *config;
@@ -140,7 +140,7 @@ static void render_frame(struct swaybg_output *output, cairo_surface_t *surface)
 
 		if (surface) {
 			render_background_image(cairo, surface,
-				output->config->mode, buffer_width, buffer_height, output->num);
+				output->config->mode, buffer_width, buffer_height, output->display_id);
 		}
 	}
 
@@ -537,7 +537,7 @@ static void render_image(struct swaybg_output* output, struct swaybg_image *imag
 	if (output->dirty && output->config->image == image) {
 		output->dirty = false;
 		output->width = output->width;
-		output->num = num;
+		output->display_id = display_counter;
 		render_frame(output, surface);
 	}
 }
