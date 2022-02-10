@@ -633,7 +633,9 @@ int main(int argc, char **argv) {
 				continue;
 			}
 
-			int display_counter = 1;
+			// display_counter should enumerate every output from left to right (maybe)
+			// in order to span the wallpaper across all monitors 
+			int display_counter = 0;
 			wl_list_for_each(output, &state.outputs, link) {
 				render_image(output, image, surface, display_counter);
 				display_counter--;
