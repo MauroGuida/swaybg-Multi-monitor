@@ -14,6 +14,8 @@ enum background_mode parse_background_mode(const char *mode) {
 		return BACKGROUND_MODE_CENTER;
 	} else if (strcmp(mode, "tile") == 0) {
 		return BACKGROUND_MODE_TILE;
+	} else if (strcmp(mode, "multi-monitor") == 0) {
+		return BACKGROUND_MODE_MULTI_MONITOR;
 	} else if (strcmp(mode, "solid_color") == 0) {
 		return BACKGROUND_MODE_SOLID_COLOR;
 	}
@@ -53,7 +55,7 @@ cairo_surface_t *load_background_image(const char *path) {
 }
 
 void render_background_image(cairo_t *cairo, cairo_surface_t *image,
-		enum background_mode mode, int buffer_width, int buffer_height) {
+		enum background_mode mode, int buffer_width, int buffer_height, int display_id) {
 	double width = cairo_image_surface_get_width(image);
 	double height = cairo_image_surface_get_height(image);
 
@@ -108,6 +110,10 @@ void render_background_image(cairo_t *cairo, cairo_surface_t *image,
 		cairo_pattern_t *pattern = cairo_pattern_create_for_surface(image);
 		cairo_pattern_set_extend(pattern, CAIRO_EXTEND_REPEAT);
 		cairo_set_source(cairo, pattern);
+		break;
+	}
+	case BACKGROUND_MODE_MULTI_MONITOR: {
+		cairo_set_source_surface(cairo, image, (buffer_width * (display_id - 1)), 0);
 		break;
 	}
 	case BACKGROUND_MODE_SOLID_COLOR:

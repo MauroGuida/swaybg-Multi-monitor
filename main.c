@@ -66,6 +66,7 @@ struct swaybg_output {
 	struct zxdg_output_v1 *xdg_output;
 	char *name;
 	char *identifier;
+	int num;
 
 	struct swaybg_state *state;
 	struct swaybg_output_config *config;
@@ -139,7 +140,7 @@ static void render_frame(struct swaybg_output *output, cairo_surface_t *surface)
 
 		if (surface) {
 			render_background_image(cairo, surface,
-				output->config->mode, buffer_width, buffer_height);
+				output->config->mode, buffer_width, buffer_height, output->num);
 		}
 	}
 
@@ -448,7 +449,7 @@ static void parse_command_line(int argc, char **argv,
 		"  -v, --version          Show the version number and quit.\n"
 		"\n"
 		"Background Modes:\n"
-		"  stretch, fit, fill, center, tile, or solid_color\n";
+		"  stretch, fit, fill, center, tile, multi-monitor, or solid_color\n";
 
 	struct swaybg_output_config *config = calloc(sizeof(struct swaybg_output_config), 1);
 	config->output = strdup("*");
@@ -530,6 +531,17 @@ static void parse_command_line(int argc, char **argv,
 		}
 	}
 }
+
+static void customRenderer(struct swaybg_output* output, struct swaybg_image *image, 
+					cairo_surface_t *surface, int num) {
+	if (output->dirty && output->config->image == image) {
+		output->dirty = false;
+		output->width = output->width;
+		output->num = num;
+		render_frame(output, surface);
+	}
+}
+
 
 int main(int argc, char **argv) {
 	swaybg_log_init(LOG_DEBUG);
@@ -621,11 +633,10 @@ int main(int argc, char **argv) {
 				continue;
 			}
 
+			int display_counter = 1;
 			wl_list_for_each(output, &state.outputs, link) {
-				if (output->dirty && output->config->image == image) {
-					output->dirty = false;
-					render_frame(output, surface);
-				}
+				customRenderer(output, image, surface, display_counter);
+				display_counter--;
 			}
 
 			image->load_required = false;
