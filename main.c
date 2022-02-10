@@ -532,8 +532,8 @@ static void parse_command_line(int argc, char **argv,
 	}
 }
 
-static void customRenderer(struct swaybg_output* output, struct swaybg_image *image, 
-					cairo_surface_t *surface, int num) {
+static void render_image(struct swaybg_output* output, struct swaybg_image *image, 
+					cairo_surface_t *surface, int display_counter) {
 	if (output->dirty && output->config->image == image) {
 		output->dirty = false;
 		output->width = output->width;
@@ -635,7 +635,7 @@ int main(int argc, char **argv) {
 
 			int display_counter = 1;
 			wl_list_for_each(output, &state.outputs, link) {
-				customRenderer(output, image, surface, display_counter);
+				render_image(output, image, surface, display_counter);
 				display_counter--;
 			}
 
