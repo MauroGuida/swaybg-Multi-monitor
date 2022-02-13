@@ -1,4 +1,4 @@
-# swaybg
+# swaybg with Multi Monitor support
 
 swaybg is a wallpaper utility for Wayland compositors. It is compatible with any
 Wayland compositor which implements the following Wayland protocols:
@@ -9,21 +9,21 @@ Wayland compositor which implements the following Wayland protocols:
 
 See the man page, `swaybg(1)`, for instructions on using swaybg.
 
-## Release Signatures
+## Description
+This is a very poorly implementation of multi monitor support for swaybg, this project adds a flag to make swaybg able to span wallpapers across multiple screens.
 
-Releases are signed with [E88F5E48](https://keys.openpgp.org/search?q=34FF9526CFEF0E97A340E2E40FDE7BE0E88F5E48)
-and published [on GitHub](https://github.com/swaywm/swaybg/releases). swaybg
-releases are managed independently of sway releases.
+There are some restrictions, this new flag will only work properly with:
+- Two monitors with the same resolution horizontally placed 
+- A wallpaper: heigth x 2 * width (3840x1080) 
 
-## Installation
+If you meet these requirements, all you have to do is launch swaybg as follows:
 
-### From Packages
+```
+swaybg -i Wallpaper.png -m multi-monitor
+```
 
-swaybg is available in many distributions. Try installing the "swaybg"
-package for yours.
-
-If you're interested in packaging swaybg for your distribution, stop by the
-IRC channel or shoot an email to sir@cmpwn.com for advice.
+In my configuration DP-2 is my Left monitor and DP-1 is the Right one.
+Your configuration may be different from mine and create some troubles, in this case try to play around with `display_counter` variable and `render_background_image` function.
 
 ### Compiling from Source
 
@@ -44,3 +44,4 @@ Run these commands:
     meson build/
     ninja -C build/
     sudo ninja -C build/ install
+
