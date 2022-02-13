@@ -532,17 +532,6 @@ static void parse_command_line(int argc, char **argv,
 	}
 }
 
-static void render_image(struct swaybg_output* output, struct swaybg_image *image, 
-					cairo_surface_t *surface, int display_counter) {
-	if (output->dirty && output->config->image == image) {
-		output->dirty = false;
-		output->width = output->width;
-		output->display_id = display_counter;
-		render_frame(output, surface);
-	}
-}
-
-
 int main(int argc, char **argv) {
 	swaybg_log_init(LOG_DEBUG);
 
@@ -637,7 +626,12 @@ int main(int argc, char **argv) {
 			// in order to span the wallpaper across all monitors 
 			int display_counter = 0;
 			wl_list_for_each(output, &state.outputs, link) {
-				render_image(output, image, surface, display_counter);
+				if (output->dirty && output->config->image == image) {
+					output->dirty = false;
+					output->width = output->width;
+					output->display_id = display_counter;
+					render_frame(output, surface);
+				}
 				display_counter--;
 			}
 

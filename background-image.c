@@ -112,14 +112,14 @@ void render_background_image(cairo_t *cairo, cairo_surface_t *image,
 		cairo_set_source(cairo, pattern);
 		break;
 	}
-	// This case requires 2 monitors with same resolution 
+	// This case requires 2 or more monitors with same resolution 
 	case BACKGROUND_MODE_MULTI_MONITOR: {
 		swaybg_log(LOG_DEBUG, "Print from %d to %d", buffer_width * (display_id * -1), buffer_width * ((display_id * -1) + 1));
 		cairo_set_source_surface(cairo, image, (double)buffer_width * display_id, 0);
 		// The 3th parameter cuts the wallpaper: 
 		// 0 will print the first half,
-		// -buffer_width * 1 will print the second right half (Cuts from 0 to 1920)
-		// TODO -buffer_width * 2 should print the third right half (Cuts from 1920 to 3840) 
+		// buffer_width * -1 will print the second right half (Cuts from 0 to 1920)
+		// buffer_width * -2 should print the third right half (Cuts from 1920 to 3840) (Not Tested) 
 		// and so on
 		break;
 	}
