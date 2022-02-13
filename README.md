@@ -23,7 +23,7 @@ swaybg -i Wallpaper.png -m multi-monitor
 ```
 
 In my configuration DP-2 is my Left monitor and DP-1 is the Right one.
-Your configuration may be different from mine and create some troubles, in this case try to play around with `display_counter` variable and `render_background_image` function.
+Your configuration may be different from mine and this could create some troubles, in this case try to play around with `display_counter` variable and `render_background_image` function.
 
 ### Compiling from Source
 
